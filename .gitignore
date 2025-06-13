@@ -1,9 +1,8 @@
-# Neovim documentation (local copy)
-neovim-docs/
-
-# Vim swap files
-*.swp
-*.swo
-
-# Neovim state files
-.nvimlog
+tt.*
+.tests
+doc/tags
+debug
+.repro
+foo.*
+*.log
+data

@@ -1,5 +1,4 @@
-# Minimal Neovim Setup
+# 💤 LazyVim
 
-This repository contains a minimal, no-distro Neovim configuration. It is designed for users who prefer to build their setup from scratch without relying on pre-packaged distributions.
-
-For Neovim configurations based on popular distros, please check the other branches of this repository.
+A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
+Refer to the [documentation](https://lazyvim.github.io/installation) to get started.
