@@ -5,6 +5,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
--- Load options and keymaps
+-- Load options, keymaps, autocommands, and LSP
 require('options')
 require('keymaps')
+require('autocmds')
+require('lsp')

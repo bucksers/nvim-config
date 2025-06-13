@@ -103,3 +103,26 @@ vim.o.virtualedit = "block"      -- Allow cursor beyond end of line in visual bl
 
 -- Spell checking
 vim.opt.spelllang = { "en" }     -- Spell check language
+
+-- ============================================================================
+-- PROVIDERS
+-- ============================================================================
+
+-- Disable optional providers to reduce checkhealth warnings
+-- These are not needed for core Neovim functionality
+
+-- Only disable Node.js provider if neovim package is not installed
+-- If you work with Node.js projects, run: npm install -g neovim
+if vim.fn.executable('npm') == 0 or vim.fn.system('npm list -g neovim 2>/dev/null'):find('neovim') == nil then
+  vim.g.loaded_node_provider = 0   -- Disable Node.js provider
+end
+
+vim.g.loaded_perl_provider = 0     -- Disable Perl provider  
+vim.g.loaded_ruby_provider = 0     -- Disable Ruby provider
+
+-- Keep Python provider enabled (useful for many plugins)
+-- But set up optimally for pyenv users
+if vim.fn.executable('python3') == 1 then
+  -- Use system python3 or pyenv global python
+  vim.g.python3_host_prog = vim.fn.exepath('python3')
+end
