@@ -7,3 +7,4 @@ neovim-docs/
 
 # Neovim state files
 .nvimlog
+.vscode/
