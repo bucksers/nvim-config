@@ -7,3 +7,12 @@ neovim-docs/
 
 # Neovim state files
 .nvimlog
+
+# Kickstart-modular specific
+tags
+test.sh
+.luarc.json
+nvim
+
+spell/
+lazy-lock.json
