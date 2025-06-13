@@ -1,8 +1,10 @@
 -- Plain Neovim Configuration
--- Minimal setup with only essential customizations
+-- Minimal setup with modular structure
 
 -- Leader key
 vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 
--- Line numbers
-vim.opt.relativenumber = true
+-- Load options and keymaps
+require('options')
+require('keymaps')
