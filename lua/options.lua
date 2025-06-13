@@ -14,6 +14,7 @@ vim.o.cursorline = true          -- Highlight the current line
 vim.o.signcolumn = 'yes'         -- Always show the sign column
 vim.o.termguicolors = true       -- Enable 24-bit RGB colors
 vim.o.showmode = false           -- Don't show mode in command line
+vim.g.have_nerd_fonts = true     -- Use Nerd Fonts for icons
 
 -- Whitespace display
 vim.o.list = true                -- Show invisible characters
