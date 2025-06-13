@@ -5,8 +5,10 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
--- Load options, keymaps, autocommands, and LSP
-require('options')
-require('keymaps')
-require('autocmds')
-require('lsp')
+-- Load configuration modules
+require('config/options')
+require('config/lazy-bootstrap')
+require('config/lazy')
+require('config/keymaps')
+require('config/autocmds')
+require('config/lsp')
