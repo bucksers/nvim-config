@@ -10,7 +10,8 @@ return {
         auto_trigger = true,
         hide_during_completion = true,
         keymap = {
-          accept = "<C-l>",
+          accept_word = "<C-l>",
+          accept = "<C-space>"
         },
       },
       panel = { enabled = false },

@@ -43,6 +43,9 @@ vim.keymap.set('v', '>', '>gv', { desc = 'Indent right and reselect' })
 vim.keymap.set('n', '<leader>y', '"+y', { desc = 'Yank to clipboard' })
 vim.keymap.set('n', '<leader>yy', '"+yy', { desc = 'Yank line to clipboard' })
 
+-- Yank entire file to system clipboard
+vim.keymap.set('n', '<leader>Y', ':%yank +<CR>', { desc = 'Yank entire file to clipboard' })
+
 -- Visual mode: <leader>y to yank selection to clipboard
 vim.keymap.set('v', '<leader>y', '"+y', { desc = 'Yank selection to clipboard' })
 

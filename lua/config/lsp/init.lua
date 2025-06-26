@@ -58,6 +58,17 @@ mason_lspconfig.setup({
   automatic_installation = true,
 })
 
+local skip = { tsserver = true }
+
+for _, server in ipairs(mason_lspconfig.get_installed_servers()) do
+  if not skip[server] then          --  new guard
+    lspconfig[server].setup({
+      on_attach    = on_attach,
+      capabilities = capabilities,
+    })
+  end
+end
+
 for _, server in ipairs(mason_lspconfig.get_installed_servers()) do
   lspconfig[server].setup({
     on_attach = on_attach,
@@ -76,3 +87,11 @@ if vim.lsp.inlay_hint then
     end,
   })
 end
+
+--------------------------------------------------------------------
+-- language-specific extensions
+--------------------------------------------------------------------
+require("config.lsp.typescript").setup {
+  on_attach    = on_attach,
+  capabilities = capabilities,
+}

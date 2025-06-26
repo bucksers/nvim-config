@@ -20,6 +20,16 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   end,
 })
 
+-- autosave on focus lost
+vim.api.nvim_create_autocmd("FocusLost", {
+  group = augroup("autosave_focuslost"),
+  callback = function()
+    -- Silently write all modifiable, modified buffers when Neovim loses focus
+    vim.cmd("silent! wa")
+  end,
+  desc = "Autosave all files on focus lost",
+})
+
 -- Go to last cursor position when opening a buffer
 vim.api.nvim_create_autocmd("BufReadPost", {
   group = augroup("last_loc"),
@@ -59,6 +69,17 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   group = augroup("highlight_yank"),
   callback = function()
     vim.highlight.on_yank()
+  end,
+})
+
+-- Keep ‘DiagnosticUnnecessary’ underline but keep normal text colour
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("FixDiagnosticGrey", { clear = true }),
+  callback = function()
+    -- remove the grey foreground the default colorscheme sets
+    --   gui=NONE   → no special style like italics/underline
+    --   guifg=NONE → inherit foreground from Normal
+    vim.cmd("highlight DiagnosticUnnecessary gui=NONE guifg=NONE")
   end,
 })
 

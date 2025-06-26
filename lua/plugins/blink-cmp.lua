@@ -2,12 +2,19 @@ return {
   {
     "saghen/blink.cmp",
     dependencies = {
-      "rafamadriz/friendly-snippets",
-      "giuxtaposition/blink-cmp-copilot",
+      "rafamadriz/friendly-snippets"
     },
     version = "1.*",
     opts = {
-      keymap = { preset = "super-tab" },
+      keymap = {
+        preset = "super-tab",
+
+        -- Disable the default mapping for C-space
+        ['<C-space>'] = {}, 
+
+        -- move <C-space> actions to <C-y>
+         ['<C-y>'] = { 'show', 'show_documentation', 'hide_documentation' }, 
+      },
       appearance = { nerd_font_variant = "mono" },
       completion = { documentation = { auto_show = false } },
       sources = {
