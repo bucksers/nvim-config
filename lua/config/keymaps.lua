@@ -1,5 +1,6 @@
 -- [[ Basic Keymaps ]]
 -- Core Neovim keymaps that appear in multiple popular configurations
+-- All keymaps use desc, so which-key will automatically show them.
 
 -- ============================================================================
 -- SEARCH & HIGHLIGHTING
@@ -26,13 +27,6 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic quickfix list' })
 
 -- ============================================================================
--- TERMINAL
--- ============================================================================
-
--- Exit terminal mode
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-
--- ============================================================================
 -- EDITING ENHANCEMENTS
 -- ============================================================================
 
@@ -40,17 +34,34 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 vim.keymap.set('v', '<', '<gv', { desc = 'Indent left and reselect' })
 vim.keymap.set('v', '>', '>gv', { desc = 'Indent right and reselect' })
 
+
 -- ============================================================================
--- BUFFER NAVIGATION
+-- SYSTEM CLIPBOARD YANKING AND PASTING (pasting with auto-indent)
 -- ============================================================================
 
--- Buffer navigation with Shift + h/l
-vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
-vim.keymap.set('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
+-- Normal mode: <leader>y to yank to system clipboard (like "y" but to +)
+vim.keymap.set('n', '<leader>y', '"+y', { desc = 'Yank to clipboard' })
+vim.keymap.set('n', '<leader>yy', '"+yy', { desc = 'Yank line to clipboard' })
 
--- Buffer navigation with bracket notation
-vim.keymap.set('n', '[b', '<cmd>bprevious<cr>', { desc = 'Prev Buffer' })
-vim.keymap.set('n', ']b', '<cmd>bnext<cr>', { desc = 'Next Buffer' })
+-- Visual mode: <leader>y to yank selection to clipboard
+vim.keymap.set('v', '<leader>y', '"+y', { desc = 'Yank selection to clipboard' })
+
+-- Insert mode: <leader>y to yank the current line (handy for insert mode)
+vim.keymap.set('i', '<leader>y', function()
+  vim.fn.setreg('+', vim.api.nvim_get_current_line())
+end, { desc = 'Yank current line to clipboard' })
+
+-- (Optional) Operator-pending mode (for text objects, e.g., <leader>yiw)
+vim.keymap.set('o', '<leader>y', '"+y', { desc = 'Yank to clipboard (operator)' })
+
+-- Normal mode: <leader>p and <leader>P paste from clipboard and re-indent
+vim.keymap.set('n', '<leader>p', '"+p`[v`]=', { desc = 'Paste after (clipboard, auto-indent)' })
+vim.keymap.set('n', '<leader>P', '"+P`[v`]=', { desc = 'Paste before (clipboard, auto-indent)' })
+
+-- Visual mode: <leader>p and <leader>P paste over selection from clipboard and re-indent
+vim.keymap.set('v', '<leader>p', '"+p`[v`]=', { desc = 'Paste over (clipboard, auto-indent)' })
+vim.keymap.set('v', '<leader>P', '"+P`[v`]=', { desc = 'Paste before over (clipboard, auto-indent)' })
+
 
 -- ============================================================================
 -- WINDOW RESIZING
@@ -61,11 +72,3 @@ vim.keymap.set('n', '<C-Up>', '<cmd>resize +2<cr>', { desc = 'Increase Window He
 vim.keymap.set('n', '<C-Down>', '<cmd>resize -2<cr>', { desc = 'Decrease Window Height' })
 vim.keymap.set('n', '<C-Left>', '<cmd>vertical resize -2<cr>', { desc = 'Decrease Window Width' })
 vim.keymap.set('n', '<C-Right>', '<cmd>vertical resize +2<cr>', { desc = 'Increase Window Width' })
-
--- ============================================================================
--- COMMENTING
--- ============================================================================
-
--- Add comment lines (requires built-in commenting or gc commands)
-vim.keymap.set('n', 'gco', 'o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>', { desc = 'Add Comment Below' })
-vim.keymap.set('n', 'gcO', 'O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>', { desc = 'Add Comment Above' })

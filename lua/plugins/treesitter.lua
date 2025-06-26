@@ -1,104 +1,71 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPre", "BufNewFile" },
     build = ":TSUpdate",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
+    event = { "BufReadPre", "BufNewFile" },
+    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+    keys = {
+      { "<c-space>", desc = "Increment Selection" },
+      { "<bs>", desc = "Decrement Selection", mode = "x" },
     },
-    config = function()
-      require("nvim-treesitter.configs").setup({
-        -- Install parsers for these languages
-        ensure_installed = { 
-          "bash", "c", "cpp", "css", "html", "java", "javascript", 
-          "jsdoc", "json", "jsonc", "lua", "luadoc", "markdown", 
-          "markdown_inline", "python", "regex", "toml", "tsx", 
-          "typescript", "vim", "vimdoc", "xml", "yaml"
+    opts = {
+      highlight = { enable = true },
+      indent = { enable = true },
+      ensure_installed = {
+        "bash", "c", "diff", "html", "javascript", "jsdoc", "json", "jsonc", "lua", "luadoc", "luap", "markdown", "markdown_inline", "printf", "python", "query", "regex", "toml", "tsx", "typescript", "vim", "vimdoc", "xml", "yaml"
+      },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-space>",
+          node_incremental = "<C-space>",
+          scope_incremental = false,
+          node_decremental = "<bs>",
         },
-        
-        -- Install parsers synchronously (only applied to `ensure_installed`)
-        sync_install = false,
-        
-        -- Automatically install missing parsers when entering buffer
-        auto_install = true,
-        
-        highlight = {
+      },
+      textobjects = {
+        move = {
           enable = true,
-          -- Disable slow treesitter highlight for large files
-          disable = function(lang, buf)
-            local max_filesize = 100 * 1024 -- 100 KB
-            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-            if ok and stats and stats.size > max_filesize then
-              return true
-            end
-          end,
+          goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer", ["]a"] = "@parameter.inner" },
+          goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
+          goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer", ["[a"] = "@parameter.inner" },
+          goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer", ["[A"] = "@parameter.inner" },
         },
-        
-        indent = {
-          enable = true,
-        },
-        
-        -- Incremental selection based on the named nodes from the grammar
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<C-space>",
-            node_incremental = "<C-space>",
-            scope_incremental = false,
-            node_decremental = "<BS>",
-          },
-        },
-        
-        -- Text objects for easier navigation and selection
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true, -- Automatically jump forward to textobj
-            keymaps = {
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
-              ["ap"] = "@parameter.outer",
-              ["ip"] = "@parameter.inner",
-            },
-          },
-          move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-              ["]f"] = "@function.outer",
-              ["]c"] = "@class.outer",
-              ["]p"] = "@parameter.inner",
-            },
-            goto_next_end = {
-              ["]F"] = "@function.outer",
-              ["]C"] = "@class.outer",
-              ["]P"] = "@parameter.inner",
-            },
-            goto_previous_start = {
-              ["[f"] = "@function.outer",
-              ["[c"] = "@class.outer",
-              ["[p"] = "@parameter.inner",
-            },
-            goto_previous_end = {
-              ["[F"] = "@function.outer",
-              ["[C"] = "@class.outer",
-              ["[P"] = "@parameter.inner",
-            },
-          },
-        },
-      })
+      },
+    },
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
     end,
   },
-
-  -- Automatically add closing tags for HTML and JSX
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    event = "BufReadPre",
+    enabled = true,
+    config = function()
+      -- When in diff mode, use default vim text objects for c & C
+      local move = require("nvim-treesitter.textobjects.move")
+      local configs = require("nvim-treesitter.configs")
+      for name, fn in pairs(move) do
+        if name:find("goto") == 1 then
+          move[name] = function(q, ...)
+            if vim.wo.diff then
+              local config = configs.get_module("textobjects.move")[name]
+              for key, query in pairs(config or {}) do
+                if q == query and key:find("[%]%[][cC]") then
+                  vim.cmd("normal! " .. key)
+                  return
+                end
+              end
+            end
+            return fn(q, ...)
+          end
+        end
+      end
+    end,
+  },
   {
     "windwp/nvim-ts-autotag",
     event = { "BufReadPre", "BufNewFile" },
-    ft = { "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "xml" },
-    config = function()
-      require("nvim-ts-autotag").setup()
-    end,
+    opts = {},
   },
 }

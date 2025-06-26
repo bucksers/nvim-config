@@ -56,12 +56,8 @@ vim.o.shiftround = true          -- Round indent to multiple of shiftwidth
 -- FILE HANDLING
 -- ============================================================================
 
--- Clipboard integration
-vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus' -- Use system clipboard
-end)
-
 -- File operations
+vim.o.swapfile = false
 vim.o.undofile = true            -- Enable persistent undo
 vim.o.undolevels = 10000         -- Number of undo levels
 vim.o.autowrite = true          -- Auto-save when switching buffers
