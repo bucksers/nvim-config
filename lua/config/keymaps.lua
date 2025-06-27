@@ -49,11 +49,6 @@ vim.keymap.set('n', '<leader>Y', ':%yank +<CR>', { desc = 'Yank entire file to c
 -- Visual mode: <leader>y to yank selection to clipboard
 vim.keymap.set('v', '<leader>y', '"+y', { desc = 'Yank selection to clipboard' })
 
--- Insert mode: <leader>y to yank the current line (handy for insert mode)
-vim.keymap.set('i', '<leader>y', function()
-  vim.fn.setreg('+', vim.api.nvim_get_current_line())
-end, { desc = 'Yank current line to clipboard' })
-
 -- (Optional) Operator-pending mode (for text objects, e.g., <leader>yiw)
 vim.keymap.set('o', '<leader>y', '"+y', { desc = 'Yank to clipboard (operator)' })
 

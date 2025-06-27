@@ -18,6 +18,8 @@ return {
       filetypes = {
         markdown = true,
         help = true,
+        kitty = false,
+        conf = false,
       },
     },
     config = function(_, opts)

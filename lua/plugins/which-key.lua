@@ -24,6 +24,9 @@ return {
       },
     },
   },
+  triggers_blacklist = {
+    i = { "<space>" },   -- ignore Space while in INSERT mode
+  },
   keys = {
     {
       "<leader>?",

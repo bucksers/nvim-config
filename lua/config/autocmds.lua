@@ -48,40 +48,53 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
--- Auto create directories when saving a file
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-  group = augroup("auto_create_dir"),
-  callback = function(event)
-    if event.match:match("^%w%w+:[\\/][\\/]") then
-      return
-    end
-    local file = vim.uv.fs_realpath(event.match) or event.match
-    vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
-  end,
-})
-
+-- -- Keep yellow squiggle but stop greying-out text
+-- local function fix_unused_hl()
+--   -- `highlight! link` makes the group inherit from Normal, and `!` forces override
+--   vim.cmd("highlight! link DiagnosticUnnecessary Normal")
+-- end
+-- -- run right now (in case diagnostics arrive before ColorScheme)
+-- fix_unused_hl()
+-- -- redo whenever a theme reloads or diagnostics refresh
+-- local grp = vim.api.nvim_create_augroup("FixDiagnosticGrey", { clear = true })
+-- vim.api.nvim_create_autocmd({ "ColorScheme", "DiagnosticChanged" }, {
+--   group = grp,
+--   callback = fix_unused_hl,
+-- })
+--
 -- ============================================================================
 -- VISUAL FEEDBACK
 -- ============================================================================
+---------------------------------------------------------------------
+-- 1.  Keep yellow squiggle for “unused” diagnostics
+--     but prevent the text from turning grey
+---------------------------------------------------------------------
 
--- Highlight when yanking (copying) text
+local function fix_unused_hl()
+  -- Link the group to Normal; the "!" forces override even if it exists
+  vim.cmd("highlight! link DiagnosticUnnecessary Normal")
+end
+
+-- Apply immediately (covers startup diagnostics)
+fix_unused_hl()
+
+-- Re-apply if you change colourschemes or when diagnostics update
+local grey_grp = vim.api.nvim_create_augroup("FixDiagnosticGrey", { clear = true })
+vim.api.nvim_create_autocmd({ "ColorScheme", "DiagnosticChanged" }, {
+  group = grey_grp,
+  callback = fix_unused_hl,
+})
+
+---------------------------------------------------------------------
+-- 2.  Highlight yanked text (uses the new vim.hl API, not deprecated)
+---------------------------------------------------------------------
 vim.api.nvim_create_autocmd("TextYankPost", {
-  group = augroup("highlight_yank"),
+  group = vim.api.nvim_create_augroup("HighlightYank", { clear = true }),
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.on_yank { higroup = "IncSearch", timeout = 200 }
   end,
 })
 
--- Keep ‘DiagnosticUnnecessary’ underline but keep normal text colour
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("FixDiagnosticGrey", { clear = true }),
-  callback = function()
-    -- remove the grey foreground the default colorscheme sets
-    --   gui=NONE   → no special style like italics/underline
-    --   guifg=NONE → inherit foreground from Normal
-    vim.cmd("highlight DiagnosticUnnecessary gui=NONE guifg=NONE")
-  end,
-})
 
 -- ============================================================================
 -- WINDOW MANAGEMENT
@@ -152,5 +165,12 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "json", "jsonc", "json5" },
   callback = function()
     vim.opt_local.conceallevel = 0
+  end,
+})
+-- ~/.config/nvim/lua/avante_disable_popup.lua  (or anywhere that is sourced)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "AvanteInput",
+  callback = function()
+    vim.b.blink_cmp_enabled = false
   end,
 })

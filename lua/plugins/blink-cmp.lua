@@ -20,7 +20,14 @@ return {
       sources = {
         default = { "lsp", "path", "snippets", "buffer" },
       },
+      disabled_filetypes = { "AvanteInput", "Avante", "AvanteEdit", },
       fuzzy = { implementation = "prefer_rust_with_warning" },
+      enabled = function()
+        local ft = vim.bo.filetype
+        -- Avante uses AvanteInput (prompt), Avante (sidebar / chat),
+        -- and AvanteEdit (edit-diff buffer)
+        return not ft:match("^Avante")
+      end,
     },
     opts_extend = { "sources.default" },
   },
