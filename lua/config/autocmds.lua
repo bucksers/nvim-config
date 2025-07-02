@@ -48,28 +48,12 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
--- -- Keep yellow squiggle but stop greying-out text
--- local function fix_unused_hl()
---   -- `highlight! link` makes the group inherit from Normal, and `!` forces override
---   vim.cmd("highlight! link DiagnosticUnnecessary Normal")
--- end
--- -- run right now (in case diagnostics arrive before ColorScheme)
--- fix_unused_hl()
--- -- redo whenever a theme reloads or diagnostics refresh
--- local grp = vim.api.nvim_create_augroup("FixDiagnosticGrey", { clear = true })
--- vim.api.nvim_create_autocmd({ "ColorScheme", "DiagnosticChanged" }, {
---   group = grp,
---   callback = fix_unused_hl,
--- })
---
 -- ============================================================================
 -- VISUAL FEEDBACK
 -- ============================================================================
----------------------------------------------------------------------
--- 1.  Keep yellow squiggle for “unused” diagnostics
---     but prevent the text from turning grey
----------------------------------------------------------------------
 
+-- Keep yellow squiggle for “unused” diagnostics
+-- but prevent the text from turning grey
 local function fix_unused_hl()
   -- Link the group to Normal; the "!" forces override even if it exists
   vim.cmd("highlight! link DiagnosticUnnecessary Normal")
@@ -85,9 +69,7 @@ vim.api.nvim_create_autocmd({ "ColorScheme", "DiagnosticChanged" }, {
   callback = fix_unused_hl,
 })
 
----------------------------------------------------------------------
--- 2.  Highlight yanked text (uses the new vim.hl API, not deprecated)
----------------------------------------------------------------------
+-- Highlight yanked text (uses the new vim.hl API, not deprecated)
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("HighlightYank", { clear = true }),
   callback = function()

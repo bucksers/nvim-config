@@ -20,7 +20,6 @@ return {
       sources = {
         default = { "lsp", "path", "snippets", "buffer" },
       },
-      disabled_filetypes = { "AvanteInput", "Avante", "AvanteEdit", },
       fuzzy = { implementation = "prefer_rust_with_warning" },
       enabled = function()
         local ft = vim.bo.filetype

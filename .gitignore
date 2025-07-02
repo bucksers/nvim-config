@@ -1,10 +1,1 @@
-# Neovim documentation (local copy)
-neovim-docs/
-
-# Vim swap files
-*.swp
-*.swo
-
-# Neovim state files
-.nvimlog
-.vscode/
+Session.vim

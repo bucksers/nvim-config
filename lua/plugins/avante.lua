@@ -10,7 +10,14 @@ return {
     --    Copilot handles inline completion; Avante chat still goes
     --    through Copilot’s GPT-4-o-based endpoint.
     --------------------------------------------------------------------
-    provider = "copilot",
+    provider = "copilot", -- Recommend using Claude
+    auto_suggestions_provider = "copilot",
+    providers = {
+      copilot = {
+        model = "claude-sonnet-4",
+      },
+    },
+
     -- omit `model` (Copilot picks its own; leaving a Claude name here
     -- would be ignored anyway)
     auto_suggestions = false,
@@ -24,7 +31,7 @@ return {
     -- 3. RAG SERVICE (Docker runner)
     --------------------------------------------------------------------
     rag_service = {
-      enabled    = true,
+      enabled    = vim.loop.cwd() == "/Users/will/komyun-app",
       runner     = "docker",
       -- Mount just this repo read-only; change to os.getenv("HOME")
       -- if you want whole-home indexing.
@@ -69,8 +76,15 @@ return {
         require("mcphub.extensions.avante").mcp_tool(),
       }
     end,
+    accessible_directories = {"/Users/will/.config/nvim", "/Users/will/komyun-app"},
   },
 
+  -- keys = {  -- Uncomment to enable key mapping for AvanteNewChat command
+  --   { "<leader><a><n>", desc = "Increment Selection" },
+  --   { 'n', '<leader><a><n>', '<cmd>AvanteChatNew<cr>', desc = 'Yank to clipboard' }
+  -- },
+
+  --- Add autocmd for AventeInput filetype in insert mode
   dependencies = {
     "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
@@ -81,4 +95,9 @@ return {
       opts = { file_types = { "markdown", "Avante" } },
     },
   },
+    windows = {
+      input = {
+        focus_on_submit = false, -- Retain cursor focus in the input buffer after submission
+      },
+    },
 }

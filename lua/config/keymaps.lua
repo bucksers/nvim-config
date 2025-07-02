@@ -1,3 +1,8 @@
+-- Enhance command-line completion
+vim.cmd([[
+  cnoremap <Tab>   wildmenumode() ? '\<C-n>' : '\<Tab>'
+  cnoremap <S-Tab> wildmenumode() ? '\<C-p>' : '\<S-Tab>'
+]])
 -- [[ Basic Keymaps ]]
 -- Core Neovim keymaps that appear in multiple popular configurations
 -- All keymaps use desc, so which-key will automatically show them.
@@ -54,11 +59,9 @@ vim.keymap.set('o', '<leader>y', '"+y', { desc = 'Yank to clipboard (operator)' 
 
 -- Normal mode: <leader>p and <leader>P paste from clipboard and re-indent
 vim.keymap.set('n', '<leader>p', '"+p`[v`]=', { desc = 'Paste after (clipboard, auto-indent)' })
-vim.keymap.set('n', '<leader>P', '"+P`[v`]=', { desc = 'Paste before (clipboard, auto-indent)' })
 
 -- Visual mode: <leader>p and <leader>P paste over selection from clipboard and re-indent
 vim.keymap.set('v', '<leader>p', '"+p`[v`]=', { desc = 'Paste over (clipboard, auto-indent)' })
-vim.keymap.set('v', '<leader>P', '"+P`[v`]=', { desc = 'Paste before over (clipboard, auto-indent)' })
 
 
 -- ============================================================================

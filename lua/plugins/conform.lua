@@ -24,10 +24,15 @@ return {
       typescriptreact = { "prettierd" },
       json = { "prettierd" },
       css = { "prettierd" },
+      lsp_format = "never",  -- Removed fallback to prevent unintentional formatting
       html = { "prettierd" },
       yaml = { "prettierd" },
       markdown = { "prettierd" },
       -- Optionally, use eslint_d first, then prettier as fallback:
+    format_on_save = {
+      timeout_ms = 500,
+      lsp_format = "fallback",
+    },
       -- javascript = { "eslint_d", "prettierd" },
       -- typescript = { "eslint_d", "prettierd" },
     },

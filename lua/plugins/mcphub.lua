@@ -13,5 +13,8 @@ return {
                 }
             }
         })
-    end
+    end,
+    keys = {
+        { "<leader>m", "<cmd>MCPHub<cr>", desc = "MCP Hub" },
+    },
 }
